@@ -38,3 +38,54 @@ Query the smallest Northern Latitude (LAT_N) from STATION that is greater than .
 
 select cast(min(lat_n) as decimal(10,4)) from station 
 where lat_n > 38.7780;
+
+
+/*
+Query the Western Longitude (LONG_W)where the smallest Northern Latitude (LAT_N) in STATION is greater than .
+ Round your answer to  decimal places.
+*/
+
+SELECT CAST(LONG_W AS DECIMAL(10,4)) FROM STATION 
+WHERE LAT_N = (SELECT MIN(LAT_N) FROM STATION WHERE LAT_N > 38.7780); 
+
+/*
+Consider a,b and c,d to be two points on a 2D plane.
+
+a happens to equal the minimum value in Northern Latitude (LAT_N in STATION).
+b happens to equal the minimum value in Western Longitude (LONG_W in STATION).
+c happens to equal the maximum value in Northern Latitude (LAT_N in STATION).
+d happens to equal the maximum value in Western Longitude (LONG_W in STATION).
+*/
+
+select cast(round( abs(max(lat_n) -min(lat_n)) + abs(max(long_w) - min(long_w)),4) as decimal(10,4) )
+from station;
+
+
+
+/*
+Query the Euclidean Distance between points P1 and P2 format your answer to display  decimal digits.
+*/
+
+select cast(   round(   sqrt( power(abs(max(lat_n) -min(lat_n)),2) + 
+                     power(abs(max(long_w) - min(long_w)),2) )    ,4) as decimal(10,4) )
+from station;
+
+
+/*
+A median is defined as a number separating the higher half of a data set from the lower half.
+ Query the median of the Northern Latitudes (LAT_N) from STATION and round your answer to  decimal places.
+*/
+
+select 
+(
+cast
+(
+   ( 
+    (select max(lat_n) 
+     from (select top 50 percent lat_n from station order by lat_n) as onehalf)
+    +
+    (select min(lat_n) 
+     from (select top 50 percent lat_n from station order by lat_n desc) as otherhalf)
+ 
+)/2 as decimal(10,4)  ) 
+) as median 
