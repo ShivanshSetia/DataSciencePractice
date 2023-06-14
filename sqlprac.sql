@@ -89,3 +89,36 @@ cast
  
 )/2 as decimal(10,4)  ) 
 ) as median 
+
+
+/*
+Given the CITY and COUNTRY tables, query the sum of the populations of all cities where the CONTINENT is 'Asia'.
+*/
+
+SELECT SUM(CITY.POPULATION)
+FROM CITY
+INNER JOIN COUNTRY ON CITY.COUNTRYCODE = COUNTRY.CODE
+WHERE COUNTRY.CONTINENT = "ASIA";
+
+/*
+Given the CITY and COUNTRY tables, query the names of all cities where the CONTINENT is 'Africa'.
+
+Note: CITY.CountryCode and COUNTRY.Code are matching key columns.
+*/
+
+
+SELECT CITY.NAME
+FROM CITY
+INNER JOIN COUNTRY ON CITY.COUNTRYCODE = COUNTRY.CODE
+WHERE COUNTRY.CONTINENT = "Africa";
+
+/*
+Given the CITY and COUNTRY tables, query the names of all the continents (COUNTRY.Continent) and
+ their respective average city populations (CITY.Population) rounded down to the nearest integer.
+*/
+
+
+SELECT Country.Continent , cast(round(avg(CITY.Population),0)  as decimal(10,0) )
+FROM CITY
+INNER JOIN COUNTRY ON CITY.COUNTRYCODE = COUNTRY.CODE
+group by Country.continent
