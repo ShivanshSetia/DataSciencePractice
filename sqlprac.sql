@@ -122,3 +122,55 @@ SELECT Country.Continent , cast(round(avg(CITY.Population),0)  as decimal(10,0) 
 FROM CITY
 INNER JOIN COUNTRY ON CITY.COUNTRYCODE = COUNTRY.CODE
 group by Country.continent
+
+
+/*
+Ketty gives Eve a task to generate a report containing three columns:
+ Name, Grade and Mark. Ketty doesn't want the NAMES of those students who received
+  a grade lower than 8. The report must be in descending order by grade -- i.e. higher
+   grades are entered first. If there is more than one student with the same grade (8-10)
+    assigned to them, order those particular students by their name alphabetically. Finally,
+     if the grade is lower than 8, use "NULL" as their name and list them by their grades in
+      descending order. If there is more than one student with the same grade (1-7) assigned
+       to them, order those particular students by their marks in ascending order.
+*/
+
+SELECT 
+CASE 
+WHEN G.GRADE>=8 THEN S.NAME
+ELSE NULL
+END AS NAM  , G.GRADE, S.MARKS FROM GRADES G
+JOIN STUDENTS S ON S.MARKS>=G.MIN_MARK AND S.MARKS<=G.MAX_MARK
+ORDER BY G.GRADE DESC, NAM ASC, S.MARKS ASC ;
+
+
+
+
+
+/*
+
+Julia just finished conducting a coding contest, and she needs your help assembling
+the leaderboard! Write a query to print the respective hacker_id and name of hackers 
+who achieved full scores for more than one challenge. Order your output in descending order
+by the total number of challenges in which the hacker earned a full score. If more than one hacker
+received full scores in same number of challenges, then sort them by ascending hacker_id.
+*/
+
+
+
+
+SELECT S.HACKER_ID, H.NAME
+FROM SUBMISSIONS S
+JOIN HACKERS H
+ON H.HACKER_ID = S.HACKER_ID
+
+JOIN 
+(SELECT C.CHALLENGE_ID, D.SCORE 
+    FROM DIFFICULTY D
+    JOIN CHALLENGES C ON D.DIFFICULTY_LEVEL = C.DIFFICULTY_LEVEL ) AS CHAL 
+ON S.CHALLENGE_ID = CHAL.CHALLENGE_ID  AND S.SCORE = CHAL.SCORE
+
+GROUP BY S.HACKER_ID , H.NAME
+HAVING COUNT(S.CHALLENGE_ID) > 1
+
+ORDER BY COUNT(S.CHALLENGE_ID) DESC,  S.HACKER_ID ASC;
