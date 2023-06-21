@@ -204,3 +204,26 @@ where
 ) 
 
 order by w.power desc , wp.age desc;
+
+
+/*
+Julia asked her students to create some coding challenges.
+ Write a query to print the hacker_id, name, and the total number of challenges 
+ created by each student. Sort your results by the total number of challenges in descending order.
+  If more than one student created the same number of challenges, then sort the result by hacker_id.
+   If more than one student created the same number of challenges and the count is less than
+    the maximum number of challenges created, then exclude those students from the result.
+*/
+
+WITH SOLUTION AS (
+SELECT h.hacker_id,
+       h.name, 
+       COUNT(c.hacker_id)AS num 
+FROM hackers h JOIN challenges c
+ON h.hacker_id = c.hacker_id
+GROUP BY h.hacker_id, h.name
+ORDER BY num DESC, h.hacker_id
+)
+
+SELECT * FROM SOLUTION 
+WHERE num = (SELECT MAX(num) FROM SOLUTION) OR num in (SELECT num FROM SOLUTION GROUP BY num HAVING COUNT(num) = 1) ;
