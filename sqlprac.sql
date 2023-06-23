@@ -253,3 +253,43 @@ on h.hacker_id = s.hacker_id
 group by h.hacker_id,h.name
 having sum(score) > 0
 order by sum(s.score) desc,h.hacker_id;
+
+
+
+
+/*
+P(R) represents a pattern drawn by Julia in R rows. The following pattern represents P(5):
+
+* * * * * 
+* * * * 
+* * * 
+* * 
+*
+Write a query to print the pattern P(20).
+*/
+
+
+DECLARE @counter int = 20
+WHILE @counter >= 1
+BEGIN
+PRINT replicate('* ', @counter)
+SET @counter = @counter - 1
+END;
+
+
+/*
+P(R) represents a pattern drawn by Julia in R rows. The following pattern represents P(5):
+
+* 
+* * 
+* * * 
+* * * * 
+* * * * *
+Write a query to print the pattern P(20).
+*/
+DECLARE @counter int = 1
+WHILE @counter <= 20
+BEGIN
+PRINT replicate('* ', @counter)
+SET @counter = @counter + 1
+END;
