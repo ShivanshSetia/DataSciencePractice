@@ -293,3 +293,47 @@ BEGIN
 PRINT replicate('* ', @counter)
 SET @counter = @counter + 1
 END;
+
+/*
+Amber's conglomerate corporation just acquired some new companies. Each of the companies follows this hierarchy: 
+
+Given the table schemas below, write a query to print the company_code, founder name, total number of lead managers,
+ total number of senior managers, total number of managers, and total number of employees. Order your output by 
+ ascending company_code.
+
+Note:
+
+The tables may contain duplicate records.
+The company_code is string, so the sorting should not be numeric. For example,
+ if the company_codes are C_1, C_2, and C_10, then the ascending company_codes will be C_1, C_10, and C_2.
+*/
+
+select  c.company_code , c.founder , count( distinct lead_manager_code) ,
+count( distinct senior_manager_code) ,
+count( distinct manager_code) , count( distinct employee_code) 
+
+from company c 
+join 
+employee em
+on c.company_code = em.company_code
+
+group by c.company_code , c.founder 
+order by c.company_code
+;
+
+
+/*
+print all prime numbers till 1000 with & in between
+*/
+
+DECLARE @counter INT = 1
+DECLARE @output varchar(max) = '2&3'
+
+WHILE @counter <= 166
+BEGIN
+    SET @output = CONCAT(@output, '&', CAST(6 * @counter - 1 AS VARCHAR))
+    SET @output = CONCAT(@output, '&', CAST(6 * @counter + 1 AS VARCHAR))
+    SET @counter = @counter + 1
+END
+
+PRINT @output;
