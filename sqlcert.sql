@@ -45,3 +45,63 @@ on c.company_code = em.company_code
 group by c.company_code , c.founder 
 order by c.company_code
 ;
+
+
+
+
+/*
+SQL Intermediate Test Answers
+*/
+select city_name , p.product_name , cinvi.total_price
+
+from city c
+join
+(
+select cu.city_id , product_id, total_price
+
+from customer cu
+join 
+
+(
+select inv.customer_id , invt.product_id ,sum(invt.line_total_price) as total_price
+from invoice inv
+join invoice_item invt
+on inv.id = invt.invoice_id
+group by  customer_id,product_id
+
+;
+) invi
+on cu.id = invi.customer_id 
+) cinvi
+on c.city_id = cinvi.city_id
+join product p
+on p.id = cinvi.product_id
+order by cinvi.total_price desc, product_name asc
+;
+
+
+
+
+SET NOCOUNT ON;
+
+
+/*
+Sql Intermediate Test Answers
+*/
+
+
+select customer_name, cast(total_price as decimal(10,6) )
+from customer c
+join invoice inv
+on  c.id = inv.customer_id
+where inv.total_price < (
+select  avg(total_price)
+from customer c
+join invoice inv
+on c.id = inv.customer_id
+
+) 
+
+
+
+go
