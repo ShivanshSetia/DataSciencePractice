@@ -338,4 +338,26 @@ END
 
 PRINT @output;
 
+/*
+Two pairs (X1, Y1) and (X2, Y2) are said to be symmetric pairs if X1 = Y2 and X2 = Y1.
 
+Write a query to output all such symmetric pairs in ascending order by the value of X. List the rows such that X1 ≤ Y1.
+*/
+
+
+
+SELECT DISTINCT t1.x, t1.y
+FROM (
+  SELECT *,
+         ROW_NUMBER() OVER (ORDER BY X) AS t1_row_num
+  FROM functions
+) AS t1
+JOIN (
+  SELECT *,
+         ROW_NUMBER() OVER (ORDER BY X) AS t2_row_num
+  FROM functions
+) AS t2
+ON t1.t1_row_num <> t2.t2_row_num and t1.x = t2.y and t1.y = t2.x  
+where t1.x <= t1.y
+order by t1.x
+;
