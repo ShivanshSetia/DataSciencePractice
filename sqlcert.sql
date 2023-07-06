@@ -105,3 +105,40 @@ on c.id = inv.customer_id
 
 
 go
+
+
+/*
+Maximum minimum and average weather in each month
+*/
+
+ SELECT MONTH(record_date), MAX(data_value) AS max, MIN(data_value) AS min,
+       round(AVG(CASE WHEN data_type = 'avg' then data_value END)) AS avg
+FROM temperature_records
+WHERE MONTH(record_date) BETWEEN 7 AND 12
+GROUP BY MONTH(record_date)
+ORDER BY MONTH(record_date);
+
+
+/*
+Hours worked on weekends
+*/
+
+
+WITH hours_worked as (
+  
+SELECT
+      emp_id,
+  	   CASE 
+       WHEN datepart(minute,TIMESTAMP) >= datepart(minute,lag(TIMESTAMP) OVER(PARTITION BY CAST(TIMESTAMP AS date),emp_id ORDER BY TIMESTAMP)) then datepart(hour,timestamp) - datepart(hour,lag(TIMESTAMP) OVER(PARTITION BY CAST(TIMESTAMP AS date),emp_id ORDER BY TIMESTAMP)) 
+  	   ELSE datepart(hour,timestamp) - datepart(hour,lag(TIMESTAMP) OVER(PARTITION BY CAST(TIMESTAMP AS date),emp_id ORDER BY TIMESTAMP)) - 1
+       END AS hours_worked
+FROM   attendance
+-- only weekends
+WHERE  datepart(weekday,TIMESTAMP) IN(7,1)
+)
+SELECT
+   emp_id,
+      SUM(hours_worked) as hours_worked
+FROM  hours_worked
+GROUP BY emp_id
+ORDER BY hours_worked desc
